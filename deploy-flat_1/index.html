@@ -267,17 +267,29 @@ function rTargets(){
   let h='';
   for(const tgt of filtered){
     const acc=DB.accounts.find(a=>a.id===tgt.accountId);const col=gColor(tgt.country||acc?.country||'US');const flag=gFlag(tgt.country||acc?.country||'US');const cCode=tgt.country||acc?.country||'?';const isF=tgt.type==='followers';
+    // ALL dates with actual data for this account (not limited to target period for current value)
+    const allAccDates=dates.filter(d=>d<=today&&gF(tgt.accountId,d)!==null);
     const tDates=dates.filter(d=>d>=tgt.startDate&&d<=tgt.endDate&&d<=today);
     const startD=new Date(tgt.startDate+'T12:00:00');const endD=new Date(tgt.endDate+'T12:00:00');const todayD=new Date(today+'T12:00:00');
     const elapsed=Math.max(0,Math.ceil((Math.min(todayD,endD)-startD)/864e5));const remaining=Math.max(0,Math.ceil((endD-todayD)/864e5));
-    let current=0,startVal=0;
-    if(isF){const dwd=tDates.filter(d=>gF(tgt.accountId,d)!==null);const lastD=dwd.length?dwd[dwd.length-1]:null;const firstD=dwd.length?dwd[0]:null;if(lastD)current=gF(tgt.accountId,lastD)||0;if(firstD)startVal=gF(tgt.accountId,firstD)||0;}
-    else{current=DB.videos.filter(v=>v.date>=tgt.startDate&&v.date<=tgt.endDate&&v.accountId===tgt.accountId).length;}
-    const dwd=tDates.filter(d=>gF(tgt.accountId,d)!==null);
-    const prevD=dwd.length>=2?dwd[dwd.length-2]:null;const prevVal=isF&&prevD?(gF(tgt.accountId,prevD)||0):0;const dayDelta=isF&&prevD?current-prevVal:0;
+    let current=0,startVal=0,lastDataDate='';
+    if(isF){
+      // Current = last known followers value for this account (from any date up to today)
+      const lastD=allAccDates.length?allAccDates[allAccDates.length-1]:null;
+      if(lastD){current=gF(tgt.accountId,lastD)||0;lastDataDate=lastD;}
+      // Start = value at or near target start date
+      const periodDates=tDates.filter(d=>gF(tgt.accountId,d)!==null);
+      const firstD=periodDates.length?periodDates[0]:null;
+      if(firstD)startVal=gF(tgt.accountId,firstD)||0;
+    }else{current=DB.videos.filter(v=>v.date>=tgt.startDate&&v.date<=tgt.endDate&&v.accountId===tgt.accountId).length;}
+    // Delta from previous day
+    const prevIdx=allAccDates.length>=2?allAccDates.length-2:-1;
+    const prevD=prevIdx>=0?allAccDates[prevIdx]:null;const prevVal=isF&&prevD?(gF(tgt.accountId,prevD)||0):0;
+    const dayDelta=isF&&prevD?current-prevVal:0;
     const gained=isF?current-startVal:current;const goalGap=isF?Math.max(1,tgt.value-startVal):Math.max(1,tgt.value);
     const progress=Math.min(100,(gained/goalGap)*100);
-    const daysData=dwd.length>1?dwd.length-1:Math.max(1,elapsed);const dailyRate=daysData>0?gained/daysData:0;
+    const periodDatesWithData=tDates.filter(d=>gF(tgt.accountId,d)!==null);
+    const daysData=periodDatesWithData.length>1?periodDatesWithData.length-1:Math.max(1,elapsed);const dailyRate=daysData>0?gained/daysData:0;
     const needed=Math.max(0,tgt.value-current);const neededRate=remaining>0?needed/remaining:needed;
     const paceRatio=neededRate>0?dailyRate/neededRate:dailyRate>0?2:0;
     let paceClass='pace-good',paceLabel='No ritmo',paceIcon='✓';
@@ -288,7 +300,7 @@ function rTargets(){
     h+=`<div class="tgt"><div class="ab" style="background:${col};"></div><button class="tgt-del" onclick="event.stopPropagation();delTarget('${tgt.id}')" title="Remover">✕</button>
       <div class="tgt-top"><div class="tgt-acc"><span class="tgt-badge" style="background:${dim(col)};color:${col};">${flag} ${cCode}</span><span class="tgt-acc-id">#${tgt.accountId}</span></div><span class="tgt-type" style="background:${isF?dim('#2BC5B4'):dim('#C23B3B')};color:${isF?'var(--complement)':'var(--brand)'};">${isF?'📊 FOLLOWERS':'🎬 VÍDEOS'}</span></div>
       <div class="tgt-name">${tgt.name||'Target'} · ${tgt.startDate.slice(5)} → ${tgt.endDate.slice(5)}</div>
-      <div class="tgt-big"><span class="tgt-val">${fmt(current)}</span>${dayDelta!==0?`<span class="tgt-delta ${dayDelta>0?'up':'down'}">${dayDelta>0?'▲+':'▼'}${Math.abs(dayDelta)}</span>`:''}</div>
+      <div class="tgt-big"><span class="tgt-val">${fmt(current)}</span>${dayDelta!==0?`<span class="tgt-delta ${dayDelta>0?'up':'down'}">${dayDelta>0?'▲+':'▼'}${Math.abs(dayDelta)}</span>`:''}${lastDataDate?`<span style="font-size:8px;color:var(--t3);margin-left:auto;">${lastDataDate.slice(5)}</span>`:''}</div>
       <div class="tgt-spark"><canvas id="spark-${tgt.id}"></canvas></div>
       <div class="tgt-bar-bg"><div class="tgt-bar" style="width:${progress.toFixed(1)}%;background:${barColor};"></div></div>
       <div class="tgt-pct"><span class="curr">${fmt(current)} / ${fmt(tgt.value)}</span><span>${progress.toFixed(0)}%</span></div>
@@ -296,9 +308,9 @@ function rTargets(){
   }
   ct.innerHTML=h;
   setTimeout(()=>{for(const tgt of filtered){const canvas=document.getElementById(`spark-${tgt.id}`);if(!canvas)continue;
-    const tDates=dates.filter(d=>d>=tgt.startDate&&d<=tgt.endDate&&d<=today);const isF=tgt.type==='followers';
-    let sparkData;if(isF){sparkData=tDates.map(d=>gF(tgt.accountId,d)).filter(v=>v!==null);}
-    else{let cum=0;sparkData=tDates.map(d=>{cum+=DB.videos.filter(v=>v.date===d&&v.accountId===tgt.accountId).length;return cum;});}
+    const sDates=dates.filter(d=>d>=tgt.startDate&&d<=tgt.endDate&&d<=today);const isF=tgt.type==='followers';
+    let sparkData;if(isF){sparkData=sDates.map(d=>gF(tgt.accountId,d)).filter(v=>v!==null);}
+    else{let cum=0;sparkData=sDates.map(d=>{cum+=DB.videos.filter(v=>v.date===d&&v.accountId===tgt.accountId).length;return cum;});}
     if(!sparkData.length)sparkData=[0];
     const col=gColor(tgt.country||DB.accounts.find(a=>a.id===tgt.accountId)?.country||'US');
     if(sparkCharts[tgt.id])sparkCharts[tgt.id].destroy();
