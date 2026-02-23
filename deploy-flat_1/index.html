@@ -158,7 +158,7 @@
 <div class="mo" id="mNiche"><div class="ml"><div class="mh"><h2>Mudança de Nicho</h2><button class="mx" onclick="cM('mNiche')">✕</button></div><div class="mb"><div class="fr"><div class="fg"><label class="fl">Conta</label><select class="fs" id="nAcc"></select></div><div class="fg"><label class="fl">Data</label><input type="date" class="fi" id="nDate"></div></div><div class="fr"><div class="fg"><label class="fl">De</label><input type="text" class="fi" id="nFrom"></div><div class="fg"><label class="fl">Para</label><input type="text" class="fi" id="nTo"></div></div><div class="fg"><label class="fl">Motivo</label><input type="text" class="fi" id="nReason"></div></div><div class="mf"><button class="b" onclick="cM('mNiche')">Cancelar</button><button class="b b-brand" onclick="saveNiche()">Salvar</button></div></div></div>
 <div class="mo" id="mAcc"><div class="ml"><div class="mh"><h2>Nova Conta</h2><button class="mx" onclick="cM('mAcc')">✕</button></div><div class="mb"><div class="fr"><div class="fg"><label class="fl">País</label><div style="display:flex;gap:4px;"><select class="fs" id="naC" style="flex:1;"></select><button class="b" style="font-size:9px;" onclick="cM('mAcc');openCountryModal();">+País</button></div></div><div class="fg"><label class="fl">ID</label><input type="text" class="fi" id="naI" placeholder="88"></div></div><div class="fg"><label class="fl">Nicho</label><input type="text" class="fi" id="naN" placeholder="Suplementos"></div></div><div class="mf"><button class="b" onclick="cM('mAcc')">Cancelar</button><button class="b b-brand" onclick="saveAcc()">Criar</button></div></div></div>
 <div class="mo" id="mCountry"><div class="ml" style="width:440px;"><div class="mh"><h2>Países</h2><button class="mx" onclick="cM('mCountry')">✕</button></div><div class="mb"><div id="cList" style="margin-bottom:14px;"></div><div style="border-top:1px solid var(--brd);padding-top:12px;"><div style="font-size:10px;font-weight:700;color:var(--t3);margin-bottom:6px;text-transform:uppercase;">Novo País</div><div class="fr3"><div class="fg"><label class="fl">Código</label><input type="text" class="fi" id="ncCode" placeholder="BR" maxlength="5" style="text-transform:uppercase;"></div><div class="fg"><label class="fl">Nome</label><input type="text" class="fi" id="ncLabel" placeholder="Brasil"></div><div class="fg"><label class="fl">Emoji</label><input type="text" class="fi" id="ncFlag" placeholder="🇧🇷"></div></div><div class="fg"><label class="fl">Cor</label><div style="display:flex;gap:5px;align-items:center;"><input type="color" id="ncPick" value="#3b82f6" style="width:34px;height:32px;border:none;background:none;cursor:pointer;"><input type="text" class="fi" id="ncColor" value="#3b82f6" style="flex:1;"></div></div></div></div><div class="mf"><button class="b" onclick="cM('mCountry')">Fechar</button><button class="b b-brand" onclick="saveCountry()">+ Adicionar</button></div></div></div>
-<div class="mo" id="mImport"><div class="ml" style="width:480px;"><div class="mh"><h2>📥 Importar Planilha</h2><button class="mx" onclick="cM('mImport')">✕</button></div><div class="mb"><p style="font-size:11px;color:var(--t2);margin-bottom:6px;">Formato: <strong>País, Conta, data1, data2, ...</strong></p><p style="font-size:10px;color:var(--amber);margin-bottom:10px;">⚠️ Células vazias = remove dados existentes daquela data</p><div class="dz" id="dZone" onclick="document.getElementById('fIn').click()"><input type="file" id="fIn" accept=".xlsx,.xls,.csv" onchange="hImport(this.files[0])"><div style="font-size:24px;margin-bottom:6px;">📁</div><div style="font-weight:700;font-size:12px;">Arraste ou clique</div><div style="font-size:10px;color:var(--t3);">.xlsx, .csv</div></div><div id="iPrev" style="display:none;margin-top:10px;"></div></div><div class="mf"><button class="b" onclick="cM('mImport')">Cancelar</button><button class="b b-brand" id="bImp" style="display:none;" onclick="doImport()">Confirmar</button></div></div></div>
+<div class="mo" id="mImport"><div class="ml" style="width:520px;"><div class="mh"><h2>📥 Importar Planilha</h2><button class="mx" onclick="cM('mImport')">✕</button></div><div class="mb"><div style="font-size:11px;color:var(--t2);margin-bottom:10px;"><strong>Aba 1 — Seguidores:</strong> País, Conta, data1, data2, ...<br><strong>Aba 2 — Vídeos (opcional):</strong> País, Conta, data1, data2, ...<br><span style="color:var(--t3);font-size:10px;">Excel: 1ª aba = followers, 2ª aba = vídeos. CSV = só followers.</span></div><p style="font-size:10px;color:var(--amber);margin-bottom:10px;">⚠️ Células vazias = remove dados existentes daquela data</p><div class="dz" id="dZone" onclick="document.getElementById('fIn').click()"><input type="file" id="fIn" accept=".xlsx,.xls,.csv" onchange="hImport(this.files[0])"><div style="font-size:24px;margin-bottom:6px;">📁</div><div style="font-weight:700;font-size:12px;">Arraste ou clique</div><div style="font-size:10px;color:var(--t3);">.xlsx, .csv</div></div><div id="iPrev" style="display:none;margin-top:10px;"></div></div><div class="mf"><button class="b" onclick="cM('mImport')">Cancelar</button><button class="b b-brand" id="bImp" style="display:none;" onclick="doImport()">Confirmar</button></div></div></div>
 <div class="mo" id="mTarget"><div class="ml"><div class="mh"><h2>🎯 Meta por Conta</h2><button class="mx" onclick="cM('mTarget')">✕</button></div><div class="mb">
   <div class="fg"><label class="fl">Conta</label><select class="fs" id="tAccount"></select></div>
   <div class="fg"><label class="fl">Tipo</label><select class="fs" id="tType"><option value="followers">📊 Followers</option><option value="videos">🎬 Vídeos</option></select></div>
@@ -189,7 +189,7 @@ const SUPABASE_URL='https://czekdqppixbkrqbpvkwo.supabase.co';
 const SUPABASE_ANON_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImN6ZWtkcXBwaXhia3JxYnB2a3dvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1ODE5MzYsImV4cCI6MjA4NzE1NzkzNn0.Sd1QmgynJMv8rWDDU3uhucBogR_2brTpQqYtTRY0J1M';
 const SHOP_THRESHOLDS={US:5000,UK:1000,IND:600,PHI:200};
 const PAL=['#C23B3B','#2BC5B4','#FBBF24','#A78BFA','#F87171','#34D399','#60A5FA','#F472B6','#FB923C','#818CF8','#E879F9','#22D3EE','#84CC16','#D946EF','#0EA5E9','#EF4444','#14B8A6','#F59E0B'];
-let sb,DB={countries:[],accounts:[],daily:{},videos:[],nicheChanges:[],targets:[]},connected=false;
+let sb,DB={countries:[],accounts:[],daily:{},videoDaily:{},videos:[],nicheChanges:[],targets:[]},connected=false;
 
 async function initSupabase(){
   if(SUPABASE_URL==='YOUR_SUPABASE_URL'){loadLocal();render();return;}
@@ -205,20 +205,26 @@ async function fetchAll(){
   try{const t=localStorage.getItem('ace_targets');if(t)DB.targets=JSON.parse(t);}catch(e){DB.targets=[];}
 }
 function setupRealtime(){if(!sb)return;sb.channel('db-changes').on('postgres_changes',{event:'*',schema:'public'},()=>{fetchAll().then(render);}).subscribe();}
-function loadLocal(){try{const r=localStorage.getItem('ace_v3');if(r){DB=JSON.parse(r);if(!DB.targets)DB.targets=[];return;}}catch(e){}DB=getDefaultDB();}
+function loadLocal(){try{const r=localStorage.getItem('ace_v3');if(r){DB=JSON.parse(r);if(!DB.targets)DB.targets=[];if(!DB.videoDaily)DB.videoDaily={};return;}}catch(e){}DB=getDefaultDB();}
 function saveLocal(){localStorage.setItem('ace_v3',JSON.stringify(DB));localStorage.setItem('ace_targets',JSON.stringify(DB.targets));}
-function getDefaultDB(){return{countries:[{code:'US',label:'US',flag:'🇺🇸',color:'#C23B3B'},{code:'UK',label:'UK',flag:'🇬🇧',color:'#2BC5B4'},{code:'IND',label:'IND',flag:'🇮🇩',color:'#FBBF24'},{code:'PHI',label:'PHI',flag:'🇵🇭',color:'#A78BFA'}],accounts:[],daily:{},videos:[],nicheChanges:[],targets:[]};}
+function getDefaultDB(){return{countries:[{code:'US',label:'US',flag:'🇺🇸',color:'#C23B3B'},{code:'UK',label:'UK',flag:'🇬🇧',color:'#2BC5B4'},{code:'IND',label:'IND',flag:'🇮🇩',color:'#FBBF24'},{code:'PHI',label:'PHI',flag:'🇵🇭',color:'#A78BFA'}],accounts:[],daily:{},videoDaily:{},videos:[],nicheChanges:[],targets:[]};}
 
 const gc=c=>DB.countries.find(x=>x.code===c)||{code:c,label:c,flag:'🏳️',color:'#888'};
 const gColor=c=>gc(c).color;const gFlag=c=>gc(c).flag;
 const dim=(h,o=.15)=>{const r=parseInt(h.slice(1,3),16),g=parseInt(h.slice(3,5),16),b=parseInt(h.slice(5,7),16);return`rgba(${r},${g},${b},${o})`;};
 const fmt=n=>(n==null||n==='')?'—':Number(n).toLocaleString('en-US');
-const gAccs=c=>DB.accounts.filter(a=>a.country===c);const gDates=()=>Object.keys(DB.daily).sort();
+const gAccs=c=>DB.accounts.filter(a=>a.country===c);const gDates=()=>{const s=new Set([...Object.keys(DB.daily),...Object.keys(DB.videoDaily||{})]);return[...s].sort();};
 const gLast=()=>{const d=gDates();return d.length?d[d.length-1]:null;};
 const gPrev=d=>{const ds=gDates();const i=ds.indexOf(d);return i>0?ds[i-1]:null;};
 const gF=(id,d)=>DB.daily[d]?.[id]??null;
+// Carry-forward: returns last known value for account on or before date d
+function gFCarry(id,d){const ds=Object.keys(DB.daily).filter(x=>x<=d&&DB.daily[x][id]!=null).sort();return ds.length?DB.daily[ds[ds.length-1]][id]:null;}
 const gTotal=(c,d)=>{let t=0;for(const a of gAccs(c)){const v=gF(a.id,d);if(v!==null)t+=v;}return t;};
-const gVC=(id,d)=>DB.videos.filter(v=>v.accountId===id&&v.date===d).length;
+// Video daily count (from videoDaily import or individual video entries)
+function gVD(id,d){const fromDaily=(DB.videoDaily||{})[d]?.[id];const fromEntries=DB.videos.filter(v=>v.accountId===id&&v.date===d).length;if(fromDaily!=null)return fromDaily;return fromEntries>0?fromEntries:null;}
+// Video carry-forward: cumulative count up to date d
+function gVCum(id,startDate,d){let total=0;const ds=gDates().filter(x=>x>=startDate&&x<=d);for(const dt of ds){const v=gVD(id,dt);if(v)total+=v;}return total;}
+const gVC=(id,d)=>{const v=gVD(id,d);return v||0;};
 const gTags=(id,d)=>{const t=[];DB.nicheChanges.filter(n=>n.accountId===id&&n.date===d).forEach(n=>t.push({text:`${n.from}→${n.to}`,type:'nc'}));[...new Set(DB.videos.filter(v=>v.accountId===id&&v.date===d&&v.niche).map(v=>v.niche))].forEach(n=>t.push({text:n,type:''}));return t;};
 function toast(m){const t=document.getElementById('toast');t.textContent=m||'Salvo!';t.classList.add('sh');setTimeout(()=>t.classList.remove('sh'),2500);}
 async function dbInsert(table,data){if(sb&&connected)return sb.from(table).insert(data);}
@@ -267,29 +273,25 @@ function rTargets(){
   let h='';
   for(const tgt of filtered){
     const acc=DB.accounts.find(a=>a.id===tgt.accountId);const col=gColor(tgt.country||acc?.country||'US');const flag=gFlag(tgt.country||acc?.country||'US');const cCode=tgt.country||acc?.country||'?';const isF=tgt.type==='followers';
-    // ALL dates with actual data for this account (not limited to target period for current value)
-    const allAccDates=dates.filter(d=>d<=today&&gF(tgt.accountId,d)!==null);
-    const tDates=dates.filter(d=>d>=tgt.startDate&&d<=tgt.endDate&&d<=today);
     const startD=new Date(tgt.startDate+'T12:00:00');const endD=new Date(tgt.endDate+'T12:00:00');const todayD=new Date(today+'T12:00:00');
     const elapsed=Math.max(0,Math.ceil((Math.min(todayD,endD)-startD)/864e5));const remaining=Math.max(0,Math.ceil((endD-todayD)/864e5));
-    let current=0,startVal=0,lastDataDate='';
+    let current=0,startVal=0;
     if(isF){
-      // Current = last known followers value for this account (from any date up to today)
-      const lastD=allAccDates.length?allAccDates[allAccDates.length-1]:null;
-      if(lastD){current=gF(tgt.accountId,lastD)||0;lastDataDate=lastD;}
-      // Start = value at or near target start date
-      const periodDates=tDates.filter(d=>gF(tgt.accountId,d)!==null);
-      const firstD=periodDates.length?periodDates[0]:null;
-      if(firstD)startVal=gF(tgt.accountId,firstD)||0;
-    }else{current=DB.videos.filter(v=>v.date>=tgt.startDate&&v.date<=tgt.endDate&&v.accountId===tgt.accountId).length;}
-    // Delta from previous day
-    const prevIdx=allAccDates.length>=2?allAccDates.length-2:-1;
-    const prevD=prevIdx>=0?allAccDates[prevIdx]:null;const prevVal=isF&&prevD?(gF(tgt.accountId,prevD)||0):0;
-    const dayDelta=isF&&prevD?current-prevVal:0;
+      // Current = carry-forward: last known followers value ≤ today
+      current=gFCarry(tgt.accountId,today)||0;
+      // Start = carry-forward value at target start
+      startVal=gFCarry(tgt.accountId,tgt.startDate)||0;
+    }else{
+      // Videos: cumulative count from target start to today
+      current=gVCum(tgt.accountId,tgt.startDate,today);
+    }
+    // Delta: compare current vs value at yesterday (carry-forward)
+    const yesterday=new Date(todayD);yesterday.setDate(yesterday.getDate()-1);const yd=yesterday.toISOString().split('T')[0];
+    const prevVal=isF?(gFCarry(tgt.accountId,yd)||0):gVCum(tgt.accountId,tgt.startDate,yd);
+    const dayDelta=current-prevVal;
     const gained=isF?current-startVal:current;const goalGap=isF?Math.max(1,tgt.value-startVal):Math.max(1,tgt.value);
     const progress=Math.min(100,(gained/goalGap)*100);
-    const periodDatesWithData=tDates.filter(d=>gF(tgt.accountId,d)!==null);
-    const daysData=periodDatesWithData.length>1?periodDatesWithData.length-1:Math.max(1,elapsed);const dailyRate=daysData>0?gained/daysData:0;
+    const dailyRate=elapsed>0?gained/elapsed:0;
     const needed=Math.max(0,tgt.value-current);const neededRate=remaining>0?needed/remaining:needed;
     const paceRatio=neededRate>0?dailyRate/neededRate:dailyRate>0?2:0;
     let paceClass='pace-good',paceLabel='No ritmo',paceIcon='✓';
@@ -300,7 +302,7 @@ function rTargets(){
     h+=`<div class="tgt"><div class="ab" style="background:${col};"></div><button class="tgt-del" onclick="event.stopPropagation();delTarget('${tgt.id}')" title="Remover">✕</button>
       <div class="tgt-top"><div class="tgt-acc"><span class="tgt-badge" style="background:${dim(col)};color:${col};">${flag} ${cCode}</span><span class="tgt-acc-id">#${tgt.accountId}</span></div><span class="tgt-type" style="background:${isF?dim('#2BC5B4'):dim('#C23B3B')};color:${isF?'var(--complement)':'var(--brand)'};">${isF?'📊 FOLLOWERS':'🎬 VÍDEOS'}</span></div>
       <div class="tgt-name">${tgt.name||'Target'} · ${tgt.startDate.slice(5)} → ${tgt.endDate.slice(5)}</div>
-      <div class="tgt-big"><span class="tgt-val">${fmt(current)}</span>${dayDelta!==0?`<span class="tgt-delta ${dayDelta>0?'up':'down'}">${dayDelta>0?'▲+':'▼'}${Math.abs(dayDelta)}</span>`:''}${lastDataDate?`<span style="font-size:8px;color:var(--t3);margin-left:auto;">${lastDataDate.slice(5)}</span>`:''}</div>
+      <div class="tgt-big"><span class="tgt-val">${fmt(current)}</span>${dayDelta!==0?`<span class="tgt-delta ${dayDelta>0?'up':'down'}">${dayDelta>0?'▲+':'▼'}${Math.abs(dayDelta)}</span>`:''}<span style="font-size:8px;color:var(--t3);margin-left:auto;">hoje</span></div>
       <div class="tgt-spark"><canvas id="spark-${tgt.id}"></canvas></div>
       <div class="tgt-bar-bg"><div class="tgt-bar" style="width:${progress.toFixed(1)}%;background:${barColor};"></div></div>
       <div class="tgt-pct"><span class="curr">${fmt(current)} / ${fmt(tgt.value)}</span><span>${progress.toFixed(0)}%</span></div>
@@ -308,9 +310,13 @@ function rTargets(){
   }
   ct.innerHTML=h;
   setTimeout(()=>{for(const tgt of filtered){const canvas=document.getElementById(`spark-${tgt.id}`);if(!canvas)continue;
-    const sDates=dates.filter(d=>d>=tgt.startDate&&d<=tgt.endDate&&d<=today);const isF=tgt.type==='followers';
-    let sparkData;if(isF){sparkData=sDates.map(d=>gF(tgt.accountId,d)).filter(v=>v!==null);}
-    else{let cum=0;sparkData=sDates.map(d=>{cum+=DB.videos.filter(v=>v.date===d&&v.accountId===tgt.accountId).length;return cum;});}
+    // Generate daily data points using carry-forward for smooth sparkline
+    const sStart=new Date(tgt.startDate+'T12:00:00'),sEnd=new Date(Math.min(new Date(tgt.endDate+'T12:00:00'),new Date(today+'T12:00:00')));
+    const sparkDates=[];for(let dt=new Date(sStart);dt<=sEnd;dt.setDate(dt.getDate()+1))sparkDates.push(dt.toISOString().split('T')[0]);
+    const isF=tgt.type==='followers';
+    let sparkData;
+    if(isF){sparkData=sparkDates.map(d=>gFCarry(tgt.accountId,d)||0);}
+    else{sparkData=sparkDates.map(d=>gVCum(tgt.accountId,tgt.startDate,d));}
     if(!sparkData.length)sparkData=[0];
     const col=gColor(tgt.country||DB.accounts.find(a=>a.id===tgt.accountId)?.country||'US');
     if(sparkCharts[tgt.id])sparkCharts[tgt.id].destroy();
@@ -331,9 +337,9 @@ function rGC(){
 
 function rVPC(){
   const d=gDates(),f=vcFilter;let ds,opts=cOpt();
-  if(vcMode==='total'){ds=[{label:'Total vídeos',data:d.map(dt=>DB.videos.filter(v=>v.date===dt).length),borderColor:'#C23B3B',backgroundColor:'rgba(194,59,59,.2)',borderWidth:3,fill:true,tension:.3,pointRadius:d.length<20?3:0}];}
-  else if(vcMode==='country'){const cs=f==='all'?DB.countries:DB.countries.filter(c=>c.code===f);ds=cs.map(c=>({label:`${c.flag} ${c.label}`,data:d.map(dt=>{const accs=gAccs(c.code);return DB.videos.filter(v=>v.date===dt&&accs.some(a=>a.id===v.accountId)).length;}),backgroundColor:c.color+'80',borderColor:c.color,borderWidth:1,borderRadius:3}));opts.scales.x.stacked=true;opts.scales.y.stacked=true;opts.scales.y.beginAtZero=true;}
-  else{const accs=f==='all'?DB.accounts:DB.accounts.filter(a=>a.country===f);const wv=accs.filter(a=>DB.videos.some(v=>v.accountId===a.id));ds=wv.map((a,i)=>({label:`${a.country}#${a.id}`,data:d.map(dt=>DB.videos.filter(v=>v.date===dt&&v.accountId===a.id).length),backgroundColor:PAL[i%PAL.length]+'80',borderColor:PAL[i%PAL.length],borderWidth:1,borderRadius:2}));opts.scales.x.stacked=true;opts.scales.y.stacked=true;opts.scales.y.beginAtZero=true;}
+  if(vcMode==='total'){ds=[{label:'Total vídeos',data:d.map(dt=>{let t=0;for(const a of DB.accounts)t+=gVC(a.id,dt);return t;}),borderColor:'#C23B3B',backgroundColor:'rgba(194,59,59,.2)',borderWidth:3,fill:true,tension:.3,pointRadius:d.length<20?3:0}];}
+  else if(vcMode==='country'){const cs=f==='all'?DB.countries:DB.countries.filter(c=>c.code===f);ds=cs.map(c=>({label:`${c.flag} ${c.label}`,data:d.map(dt=>{let t=0;for(const a of gAccs(c.code))t+=gVC(a.id,dt);return t;}),backgroundColor:c.color+'80',borderColor:c.color,borderWidth:1,borderRadius:3}));opts.scales.x.stacked=true;opts.scales.y.stacked=true;opts.scales.y.beginAtZero=true;}
+  else{const accs=f==='all'?DB.accounts:DB.accounts.filter(a=>a.country===f);const wv=accs.filter(a=>d.some(dt=>gVC(a.id,dt)>0));ds=wv.map((a,i)=>({label:`${a.country}#${a.id}`,data:d.map(dt=>gVC(a.id,dt)),backgroundColor:PAL[i%PAL.length]+'80',borderColor:PAL[i%PAL.length],borderWidth:1,borderRadius:2}));opts.scales.x.stacked=true;opts.scales.y.stacked=true;opts.scales.y.beginAtZero=true;}
   if(vPCh)vPCh.destroy();vPCh=new Chart(document.getElementById('vPChart'),{type:vcMode==='total'?'line':'bar',data:{labels:d.map(x=>x.slice(5)),datasets:ds},options:opts});
 }
 
@@ -379,14 +385,49 @@ function onCtCC(){const code=document.getElementById('ctCountry').value;document
 function saveCountryTarget(){const code=document.getElementById('ctCountry').value,accs=gAccs(code);if(!accs.length)return toast('Nenhuma conta');const value=parseInt(document.getElementById('ctValue').value),name=document.getElementById('ctName').value.trim(),startDate=document.getElementById('ctStart').value,endDate=document.getElementById('ctEnd').value;if(!value||!startDate||!endDate)return toast('Preencha tudo');const ts=Date.now();for(let i=0;i<accs.length;i++){DB.targets=DB.targets.filter(t=>t.accountId!==accs[i].id);DB.targets.push({id:(ts+i).toString(),accountId:accs[i].id,country:code,type:'followers',name:name||`Shop ${code}`,value,startDate,endDate});}saveLocal();cM('mCTarget');toast(`${accs.length} contas atualizadas!`);rTargets();}
 
 function openResetModal(){document.querySelectorAll('#mReset input[type=checkbox]').forEach(c=>c.checked=false);oM('mReset');}
-async function execReset(){const all=document.getElementById('rAll').checked;const rT=all||document.getElementById('rTargets').checked,rD=all||document.getElementById('rDaily').checked,rV=all||document.getElementById('rVideos').checked,rN=all||document.getElementById('rNiches').checked;if(!rT&&!rD&&!rV&&!rN)return toast('Selecione algo');if(!confirm(all?'⚠️ TODOS os dados serão apagados!':'Confirma o reset?'))return;if(rT)DB.targets=[];if(rD){DB.daily={};if(sb&&connected)await sb.from('daily_data').delete().neq('date','__never__');}if(rV){DB.videos=[];if(sb&&connected)await sb.from('videos').delete().neq('date','__never__');}if(rN){DB.nicheChanges=[];if(sb&&connected)await sb.from('niche_changes').delete().neq('date','__never__');}if(all){DB.accounts=[];DB.countries=[];DB.daily={};DB.videos=[];DB.nicheChanges=[];DB.targets=[];if(sb&&connected){await sb.from('daily_data').delete().neq('date','__never__');await sb.from('videos').delete().neq('date','__never__');await sb.from('niche_changes').delete().neq('date','__never__');await sb.from('accounts').delete().neq('id','__never__');await sb.from('countries').delete().neq('code','__never__');}}saveLocal();cM('mReset');toast('Reset concluído!');render();}
+async function execReset(){const all=document.getElementById('rAll').checked;const rT=all||document.getElementById('rTargets').checked,rD=all||document.getElementById('rDaily').checked,rV=all||document.getElementById('rVideos').checked,rN=all||document.getElementById('rNiches').checked;if(!rT&&!rD&&!rV&&!rN)return toast('Selecione algo');if(!confirm(all?'⚠️ TODOS os dados serão apagados!':'Confirma o reset?'))return;if(rT)DB.targets=[];if(rD){DB.daily={};if(sb&&connected)await sb.from('daily_data').delete().neq('date','__never__');}if(rV){DB.videos=[];DB.videoDaily={};if(sb&&connected)await sb.from('videos').delete().neq('date','__never__');}if(rN){DB.nicheChanges=[];if(sb&&connected)await sb.from('niche_changes').delete().neq('date','__never__');}if(all){DB.accounts=[];DB.countries=[];DB.daily={};DB.videoDaily={};DB.videos=[];DB.nicheChanges=[];DB.targets=[];if(sb&&connected){await sb.from('daily_data').delete().neq('date','__never__');await sb.from('videos').delete().neq('date','__never__');await sb.from('niche_changes').delete().neq('date','__never__');await sb.from('accounts').delete().neq('id','__never__');await sb.from('countries').delete().neq('code','__never__');}}saveLocal();cM('mReset');toast('Reset concluído!');render();}
 
 let pendImp=null;
 function openImportModal(){document.getElementById('iPrev').style.display='none';document.getElementById('bImp').style.display='none';document.getElementById('fIn').value='';pendImp=null;oM('mImport');}
 const dz=document.getElementById('dZone');dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('dg');});dz.addEventListener('dragleave',()=>dz.classList.remove('dg'));dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('dg');if(e.dataTransfer.files.length)hImport(e.dataTransfer.files[0]);});
-function hImport(f){if(!f)return;const ext=f.name.split('.').pop().toLowerCase();if(ext==='csv'){const r=new FileReader();r.onload=e=>pCSV(e.target.result);r.readAsText(f);}else{const r=new FileReader();r.onload=e=>{const wb=XLSX.read(e.target.result,{type:'array'});pCSV(XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[0]]));};r.readAsArrayBuffer(f);}}
-function pCSV(csv){const ls=csv.trim().split('\n').map(l=>l.split(',').map(c=>c.trim()));if(ls.length<2)return toast('Vazio');const hd=ls[0],dates=hd.slice(2);const rows=ls.slice(1).filter(r=>r.length>=3).map(r=>({country:r[0],accountId:r[1],values:r.slice(2).map(v=>{if(v===''||v===null||v===undefined)return null;const n=parseInt(v);return isNaN(n)?null:n;})}));let dp=0;for(const r of rows)for(const v of r.values)if(v!==null)dp++;pendImp={dates,rows};document.getElementById('iPrev').style.display='';document.getElementById('iPrev').innerHTML=`<div style="background:var(--bg-2);border:1px solid var(--brd);border-radius:var(--radius-sm);padding:10px;"><div style="font-weight:700;font-size:11px;color:var(--complement);">✓ ${rows.length} contas · ${dates.length} datas · ${dp} valores</div><div style="font-size:10px;color:var(--t2);">${dates[0]} → ${dates[dates.length-1]}</div><div style="font-size:9px;color:var(--amber);margin-top:4px;">Células vazias removerão dados existentes</div></div>`;document.getElementById('bImp').style.display='';}
-async function doImport(){if(!pendImp)return;const{dates,rows}=pendImp;for(const r of rows){if(!DB.countries.find(c=>c.code===r.country)){const cls=['#C23B3B','#2BC5B4','#FBBF24','#A78BFA','#F87171','#34D399'];DB.countries.push({code:r.country,label:r.country,flag:'🏳️',color:cls[DB.countries.length%cls.length]});await dbInsert('countries',{code:r.country,label:r.country,flag:'🏳️',color:cls[DB.countries.length%cls.length]});}if(!DB.accounts.find(a=>a.id===r.accountId&&a.country===r.country)){DB.accounts.push({id:r.accountId,country:r.country,niche:'',status:'active',createdAt:new Date().toISOString().split('T')[0]});await dbInsert('accounts',{id:r.accountId,country:r.country});}const ub=[];const delb=[];for(let i=0;i<dates.length;i++){const d=dates[i],v=r.values[i];if(v!==null){if(!DB.daily[d])DB.daily[d]={};DB.daily[d][r.accountId]=v;ub.push({account_id:r.accountId,account_country:r.country,date:d,followers:v});}else{if(DB.daily[d]&&DB.daily[d][r.accountId]!==undefined){delete DB.daily[d][r.accountId];if(Object.keys(DB.daily[d]).length===0)delete DB.daily[d];delb.push({account_id:r.accountId,date:d});}}}if(ub.length)await dbUpsert('daily_data',ub);for(const del of delb){if(sb&&connected)await sb.from('daily_data').delete().match(del);}}saveLocal();cM('mImport');toast(`Importado! ${rows.length} contas`);pendImp=null;render();}
+function hImport(f){if(!f)return;const ext=f.name.split('.').pop().toLowerCase();if(ext==='csv'){const r=new FileReader();r.onload=e=>pSheet(e.target.result,null);r.readAsText(f);}else{const r=new FileReader();r.onload=e=>{const wb=XLSX.read(e.target.result,{type:'array'});const fCsv=XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[0]]);const vCsv=wb.SheetNames.length>1?XLSX.utils.sheet_to_csv(wb.Sheets[wb.SheetNames[1]]):null;pSheet(fCsv,vCsv);};r.readAsArrayBuffer(f);}}
+function parseRows(csv){const ls=csv.trim().split('\n').map(l=>l.split(',').map(c=>c.trim()));if(ls.length<2)return null;const hd=ls[0],dates=hd.slice(2);const rows=ls.slice(1).filter(r=>r.length>=3).map(r=>({country:r[0],accountId:r[1],values:r.slice(2).map(v=>{if(v===''||v===null||v===undefined)return null;const n=parseInt(v);return isNaN(n)?null:n;})}));return{dates,rows};}
+function pSheet(fCsv,vCsv){
+  const fData=parseRows(fCsv);if(!fData)return toast('Vazio');
+  const vData=vCsv?parseRows(vCsv):null;
+  let dp=0;for(const r of fData.rows)for(const v of r.values)if(v!==null)dp++;
+  let vdp=0;if(vData)for(const r of vData.rows)for(const v of r.values)if(v!==null)vdp++;
+  pendImp={fData,vData};
+  let preview=`<div style="background:var(--bg-2);border:1px solid var(--brd);border-radius:var(--radius-sm);padding:10px;">`;
+  preview+=`<div style="font-weight:700;font-size:11px;color:var(--complement);">📊 Seguidores: ${fData.rows.length} contas · ${fData.dates.length} datas · ${dp} valores</div>`;
+  preview+=`<div style="font-size:10px;color:var(--t2);">${fData.dates[0]} → ${fData.dates[fData.dates.length-1]}</div>`;
+  if(vData){preview+=`<div style="font-weight:700;font-size:11px;color:var(--brand);margin-top:6px;">🎬 Vídeos: ${vData.rows.length} contas · ${vData.dates.length} datas · ${vdp} valores</div>`;}
+  else{preview+=`<div style="font-size:9px;color:var(--t3);margin-top:4px;">Sem aba de vídeos detectada</div>`;}
+  preview+=`</div>`;
+  document.getElementById('iPrev').style.display='';document.getElementById('iPrev').innerHTML=preview;document.getElementById('bImp').style.display='';
+}
+async function doImport(){
+  if(!pendImp)return;const{fData,vData}=pendImp;
+  // Import followers
+  for(const r of fData.rows){
+    if(!DB.countries.find(c=>c.code===r.country)){const cls=['#C23B3B','#2BC5B4','#FBBF24','#A78BFA','#F87171','#34D399'];DB.countries.push({code:r.country,label:r.country,flag:'🏳️',color:cls[DB.countries.length%cls.length]});await dbInsert('countries',{code:r.country,label:r.country,flag:'🏳️',color:cls[DB.countries.length%cls.length]});}
+    if(!DB.accounts.find(a=>a.id===r.accountId&&a.country===r.country)){DB.accounts.push({id:r.accountId,country:r.country,niche:'',status:'active',createdAt:new Date().toISOString().split('T')[0]});await dbInsert('accounts',{id:r.accountId,country:r.country});}
+    const ub=[];const delb=[];
+    for(let i=0;i<fData.dates.length;i++){const d=fData.dates[i],v=r.values[i];
+      if(v!==null){if(!DB.daily[d])DB.daily[d]={};DB.daily[d][r.accountId]=v;ub.push({account_id:r.accountId,account_country:r.country,date:d,followers:v});}
+      else{if(DB.daily[d]&&DB.daily[d][r.accountId]!==undefined){delete DB.daily[d][r.accountId];if(Object.keys(DB.daily[d]).length===0)delete DB.daily[d];delb.push({account_id:r.accountId,date:d});}}}
+    if(ub.length)await dbUpsert('daily_data',ub);for(const del of delb){if(sb&&connected)await sb.from('daily_data').delete().match(del);}
+  }
+  // Import videos (daily counts)
+  if(vData){for(const r of vData.rows){
+    if(!DB.accounts.find(a=>a.id===r.accountId))continue;// skip unknown accounts
+    for(let i=0;i<vData.dates.length;i++){const d=vData.dates[i],v=r.values[i];
+      if(v!==null&&v>0){if(!DB.videoDaily[d])DB.videoDaily[d]={};DB.videoDaily[d][r.accountId]=v;}
+      else if(v===0||v===null){if(DB.videoDaily[d])delete DB.videoDaily[d][r.accountId];}
+    }
+  }}
+  saveLocal();cM('mImport');toast(`Importado! ${fData.rows.length} contas${vData?' + vídeos':''}`);pendImp=null;render();
+}
 function exportCSV(){const d=gDates();let csv='País,Conta,'+d.join(',')+'\n';for(const a of DB.accounts){const r=[a.country,a.id];for(const dt of d){const v=gF(a.id,dt);r.push(v!=null?v:'');}csv+=r.join(',')+'\n';}const b=new Blob([csv],{type:'text/csv'}),u=URL.createObjectURL(b),el=document.createElement('a');el.href=u;el.download=`digital_ace_${new Date().toISOString().split('T')[0]}.csv`;el.click();URL.revokeObjectURL(u);toast('Exportado!');}
 
 initSupabase();
