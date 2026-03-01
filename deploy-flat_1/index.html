@@ -205,10 +205,17 @@ async function initSupabase(){
 async function fetchAll(){
   const[c,a,d,v,n]=await Promise.all([sb.from('countries').select('*').order('created_at'),sb.from('accounts').select('*').order('country,id'),sb.from('daily_data').select('*').order('date'),sb.from('videos').select('*').order('date,time'),sb.from('niche_changes').select('*').order('date')]);
   DB.countries=c.data||[];DB.accounts=(a.data||[]).map(r=>({id:r.id,country:r.country,niche:r.niche||'',status:r.status||'active',createdAt:r.created_at}));
-  DB.daily={};for(const r of(d.data||[])){if(!DB.daily[r.date])DB.daily[r.date]={};DB.daily[r.date][r.account_id]=r.followers;}
+  DB.daily={};DB.videoDaily={};
+  for(const r of(d.data||[])){
+    if(!DB.daily[r.date])DB.daily[r.date]={};
+    DB.daily[r.date][r.account_id]=r.followers;
+    // Populate videoDaily from videos_posted column (from tiktok_sync script)
+    if(r.videos_posted&&r.videos_posted>0){if(!DB.videoDaily[r.date])DB.videoDaily[r.date]={};DB.videoDaily[r.date][r.account_id]=r.videos_posted;}
+  }
   DB.videos=(v.data||[]).map(r=>({id:r.id.toString(),accountId:r.account_id,date:r.date,time:r.time||'',niche:r.niche||'',notes:r.notes||''}));
   DB.nicheChanges=(n.data||[]).map(r=>({id:r.id.toString(),accountId:r.account_id,date:r.date,from:r.niche_from||'',to:r.niche_to,reason:r.reason||''}));
   try{const t=localStorage.getItem('ace_targets');if(t)DB.targets=JSON.parse(t);}catch(e){DB.targets=[];}
+  saveLocal();
 }
 function setupRealtime(){if(!sb)return;sb.channel('db-changes').on('postgres_changes',{event:'*',schema:'public'},()=>{fetchAll().then(render);}).subscribe();}
 function loadLocal(){try{const r=localStorage.getItem('ace_v3');if(r){DB=JSON.parse(r);if(!DB.targets)DB.targets=[];if(!DB.videoDaily)DB.videoDaily={};return;}}catch(e){}DB=getDefaultDB();}
@@ -247,10 +254,17 @@ let gCh,vPCh,aCh,odCh;const sparkCharts={};
 let tgtFilter='all',ogC='all',ogM='hm',ctf='all',gcMode='country',vcMode='total',gcFilter='all',vcFilter='all';
 
 function rStats(){
-  const l=gLast(),p=l?gPrev(l):null,r=document.getElementById('statsRow');let h='';
-  for(const c of DB.countries){const ac=gAccs(c.code),tt=l?gTotal(c.code,l):0;let ch='—';
-    if(p){const pt=gTotal(c.code,p),df=tt-pt;if(df>0)ch=`<span class="u">▲+${fmt(df)}</span>`;else if(df<0)ch=`<span class="dn">▼${fmt(df)}</span>`;else ch='<span class="cz">0</span>';}
-    h+=`<div class="sc"><div class="ab" style="background:${c.color};"></div><div class="sl">${c.flag} ${c.label} — ${ac.length} contas</div><div class="sv">${fmt(tt)}</div><div class="ss">followers ${ch}</div></div>`;}
+  const today=new Date().toISOString().split('T')[0];
+  const yd=new Date();yd.setDate(yd.getDate()-1);const yds=yd.toISOString().split('T')[0];
+  const r=document.getElementById('statsRow');let h='';
+  for(const c of DB.countries){
+    const ac=gAccs(c.code);
+    let tt=0;for(const a of ac){const v=gFCarry(a.id,today);if(v)tt+=v;}
+    let pt=0;for(const a of ac){const v=gFCarry(a.id,yds);if(v)pt+=v;}
+    let ch='—';if(pt>0||tt>0){const df=tt-pt;if(df>0)ch=`<span class="u">▲+${fmt(df)}</span>`;else if(df<0)ch=`<span class="dn">▼${fmt(df)}</span>`;else ch='<span class="cz">0</span>';}
+    let vidToday=0;for(const a of ac)vidToday+=gVC(a.id,today);
+    const vidStr=vidToday>0?` · <span style="color:var(--brand);">🎬${vidToday}</span>`:'';
+    h+=`<div class="sc"><div class="ab" style="background:${c.color};"></div><div class="sl">${c.flag} ${c.label} — ${ac.length} contas</div><div class="sv">${fmt(tt)}</div><div class="ss">followers ${ch}${vidStr}</div></div>`;}
   r.innerHTML=h;r.style.gridTemplateColumns=`repeat(${Math.min(DB.countries.length||1,5)},1fr)`;
 }
 
