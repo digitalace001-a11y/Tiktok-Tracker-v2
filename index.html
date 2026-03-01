@@ -200,16 +200,16 @@ let sb,DB={countries:[],accounts:[],daily:{},videoDaily:{},videos:[],nicheChange
 async function initSupabase(){
   if(SUPABASE_URL==='YOUR_SUPABASE_URL'){loadLocal();render();return;}
   try{sb=supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);await fetchAll();connected=true;document.getElementById('syncDot').title='Conectado';setupRealtime();render();}
-  catch(e){console.error(e);document.getElementById('syncDot').classList.add('off');loadLocal();render();}
+  catch(e){console.error('Supabase error:',e);document.getElementById('syncDot').classList.add('off');loadLocal();render();}
 }
 async function fetchAll(){
   const[c,a,d,v,n]=await Promise.all([sb.from('countries').select('*').order('created_at'),sb.from('accounts').select('*').order('country,id'),sb.from('daily_data').select('*').order('date'),sb.from('videos').select('*').order('date,time'),sb.from('niche_changes').select('*').order('date')]);
+  console.log('[Sync]',c.data?.length||0,'countries,',a.data?.length||0,'accounts,',d.data?.length||0,'daily_data rows');
   DB.countries=c.data||[];DB.accounts=(a.data||[]).map(r=>({id:r.id,country:r.country,niche:r.niche||'',status:r.status||'active',createdAt:r.created_at}));
   DB.daily={};DB.videoDaily={};
   for(const r of(d.data||[])){
     if(!DB.daily[r.date])DB.daily[r.date]={};
     DB.daily[r.date][r.account_id]=r.followers;
-    // Populate videoDaily from videos_posted column (from tiktok_sync script)
     if(r.videos_posted&&r.videos_posted>0){if(!DB.videoDaily[r.date])DB.videoDaily[r.date]={};DB.videoDaily[r.date][r.account_id]=r.videos_posted;}
   }
   DB.videos=(v.data||[]).map(r=>({id:r.id.toString(),accountId:r.account_id,date:r.date,time:r.time||'',niche:r.niche||'',notes:r.notes||''}));
