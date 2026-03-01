@@ -107,6 +107,7 @@
     <button class="b" onclick="openResetModal()">🗑️ Reset</button>
     <button class="b" onclick="openImportModal()">📥 Import</button>
     <button class="b" onclick="exportCSV()">📊 Export</button>
+    <button class="b" onclick="openManualSync()">✏️ Manual</button>
     <button class="b" onclick="openVideoModal()">🎬</button>
     <button class="b b-brand" onclick="openDailyModal()">+ Dados</button>
   </div>
@@ -182,6 +183,11 @@
   <label style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--brd);border-radius:var(--radius-sm);margin-bottom:6px;cursor:pointer;font-size:12px;font-weight:600;"><input type="checkbox" id="rNiches"> 🔄 Mudanças de Nicho</label>
   <label style="display:flex;align-items:center;gap:8px;padding:10px;border:1px solid var(--red);border-radius:var(--radius-sm);margin-bottom:6px;cursor:pointer;font-size:12px;font-weight:600;color:var(--red);"><input type="checkbox" id="rAll"> ⚠️ TUDO (contas e países)</label>
 </div><div class="mf"><button class="b" onclick="cM('mReset')">Cancelar</button><button class="b" style="background:var(--red);border-color:var(--red);color:#fff;" onclick="execReset()">Confirmar Reset</button></div></div></div>
+<div class="mo" id="mManual"><div class="ml" style="width:560px;"><div class="mh"><h2>✏️ Entrada Manual</h2><button class="mx" onclick="cM('mManual')">✕</button></div><div class="mb">
+  <p style="font-size:11px;color:var(--t2);margin-bottom:10px;">Use quando a automação falhar. Insira followers e/ou vídeos postados hoje.</p>
+  <div class="fg"><label class="fl">Data</label><input type="date" class="fi" id="msDate"></div>
+  <div style="max-height:380px;overflow-y:auto;" id="msFields"></div>
+</div><div class="mf"><button class="b" onclick="cM('mManual')">Cancelar</button><button class="b b-brand" onclick="saveManualSync()">💾 Salvar Tudo</button></div></div></div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -429,6 +435,52 @@ async function doImport(){
   saveLocal();cM('mImport');toast(`Importado! ${fData.rows.length} contas${vData?' + vídeos':''}`);pendImp=null;render();
 }
 function exportCSV(){const d=gDates();let csv='País,Conta,'+d.join(',')+'\n';for(const a of DB.accounts){const r=[a.country,a.id];for(const dt of d){const v=gF(a.id,dt);r.push(v!=null?v:'');}csv+=r.join(',')+'\n';}const b=new Blob([csv],{type:'text/csv'}),u=URL.createObjectURL(b),el=document.createElement('a');el.href=u;el.download=`digital_ace_${new Date().toISOString().split('T')[0]}.csv`;el.click();URL.revokeObjectURL(u);toast('Exportado!');}
+
+function openManualSync(){
+  document.getElementById('msDate').value=new Date().toISOString().split('T')[0];
+  const ct=document.getElementById('msFields');
+  let h='';
+  for(const c of DB.countries){
+    const ac=gAccs(c.code);if(!ac.length)continue;
+    h+=`<div style="margin-bottom:14px;"><div style="font-size:11px;font-weight:700;margin-bottom:6px;color:${c.color};">${c.flag} ${c.label}</div>`;
+    h+=`<div style="display:grid;grid-template-columns:auto 1fr 1fr;gap:4px 8px;align-items:center;font-size:10px;">`;
+    h+=`<div style="font-weight:700;color:var(--t3);">Conta</div><div style="font-weight:700;color:var(--t3);text-align:center;">Followers</div><div style="font-weight:700;color:var(--t3);text-align:center;">Vídeos Hoje</div>`;
+    for(const a of ac){
+      const lastF=gFCarry(a.id,new Date().toISOString().split('T')[0]);
+      h+=`<div style="font-family:var(--mono);font-weight:600;">#${a.id}</div>`;
+      h+=`<input type="number" class="fi ms-f" data-a="${a.id}" data-c="${a.country}" placeholder="${lastF!==null?lastF:'—'}" style="padding:4px 6px;font-size:11px;text-align:center;">`;
+      h+=`<input type="number" class="fi ms-v" data-a="${a.id}" data-c="${a.country}" placeholder="0" min="0" style="padding:4px 6px;font-size:11px;text-align:center;">`;
+    }
+    h+=`</div></div>`;
+  }
+  ct.innerHTML=h;oM('mManual');
+}
+async function saveManualSync(){
+  const d=document.getElementById('msDate').value;if(!d)return toast('Selecione data');
+  let saved=0;
+  // Save followers
+  const fInputs=document.querySelectorAll('.ms-f');
+  for(const inp of fInputs){
+    const v=inp.value.trim();if(v==='')continue;
+    const id=inp.dataset.a,c=inp.dataset.c,num=parseInt(v);
+    if(isNaN(num))continue;
+    if(!DB.daily[d])DB.daily[d]={};
+    DB.daily[d][id]=num;
+    await dbUpsert('daily_data',{account_id:id,account_country:c,date:d,followers:num});
+    saved++;
+  }
+  // Save videos posted
+  const vInputs=document.querySelectorAll('.ms-v');
+  for(const inp of vInputs){
+    const v=inp.value.trim();if(v===''||v==='0')continue;
+    const id=inp.dataset.a,c=inp.dataset.c,num=parseInt(v);
+    if(isNaN(num)||num<=0)continue;
+    if(!DB.videoDaily[d])DB.videoDaily[d]={};
+    DB.videoDaily[d][id]=(DB.videoDaily[d][id]||0)+num;
+    saved++;
+  }
+  saveLocal();cM('mManual');toast(`${saved} campos salvos!`);render();
+}
 
 initSupabase();
 </script>
