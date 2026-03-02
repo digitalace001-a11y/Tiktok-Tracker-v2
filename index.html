@@ -100,7 +100,9 @@
 </head>
 <body>
 <header class="hdr">
-  <div class="hdr-l"><div class="logo"><div class="d"></div>DIGITAL ACE<span>Growth Tracker</span></div><span class="sync" id="syncDot" title="Conectado"></span></div>
+  <div class="hdr-l"><div class="logo"><div class="d"></div>DIGITAL ACE<span>Growth Tracker</span></div><span class="sync" id="syncDot" title="Conectado"></span>
+    <div id="syncInfo" style="font-size:9px;color:var(--t3);line-height:1.3;margin-left:12px;white-space:nowrap;"></div>
+  </div>
   <div class="hdr-r">
     <div class="thm" onclick="toggleTheme()" title="Tema"><span class="i m">🌙</span><span class="i s">☀️</span></div>
     <button class="b" onclick="openCountryModal()">🌍</button>
@@ -247,8 +249,36 @@ async function dbDelete(table,match){if(sb&&connected)return sb.from(table).dele
 function toggleTheme(){const h=document.documentElement,n=h.getAttribute('data-theme')==='dark'?'light':'dark';h.setAttribute('data-theme',n);localStorage.setItem('ace_theme',n);render();}
 (function(){const t=localStorage.getItem('ace_theme');if(t)document.documentElement.setAttribute('data-theme',t);})();
 function swTab(t,el){document.querySelectorAll('.tab').forEach(x=>x.classList.remove('a'));el.classList.add('a');['overview','calendar','accounts','videos','timeline'].forEach(x=>{document.getElementById('tab-'+x).style.display=x===t?'':'none';});render(t);}
-function render(t){const v=t||getVisibleTab();if(v==='overview'){rStats();bPills();rTargets();rGC();rVPC();rAC();iGD();rGrid();rMT('all');}if(v==='calendar')rCal();if(v==='accounts')rAccT();if(v==='videos')rVid();if(v==='timeline')rTL();}
+function render(t){const v=t||getVisibleTab();rSyncInfo();if(v==='overview'){rStats();bPills();rTargets();rGC();rVPC();rAC();iGD();rGrid();rMT('all');}if(v==='calendar')rCal();if(v==='accounts')rAccT();if(v==='videos')rVid();if(v==='timeline')rTL();}
 function getVisibleTab(){for(const t of['overview','calendar','accounts','videos','timeline'])if(document.getElementById('tab-'+t).style.display!=='none')return t;return'overview';}
+
+function rSyncInfo(){
+  const el=document.getElementById('syncInfo');if(!el)return;
+  const dates=gDates();
+  if(!dates.length){el.innerHTML='<span style="color:var(--amber);">Sem dados</span>';return;}
+  const lastDate=dates[dates.length-1];
+  // Format last update nicely
+  const ld=new Date(lastDate+'T12:00:00');
+  const today=new Date();today.setHours(0,0,0,0);
+  const diffDays=Math.floor((today-ld)/864e5);
+  let lastStr=lastDate.slice(5).replace('-','/');
+  if(diffDays===0)lastStr='Hoje';
+  else if(diffDays===1)lastStr='Ontem';
+  else lastStr+=` (${diffDays}d atrás)`;
+  // Next sync: based on 4h intervals starting at 8:00
+  const now=new Date();
+  const hours=[8,12,16,20,0,4];
+  let nextSync=null;
+  for(const h of hours){
+    const candidate=new Date(now);candidate.setHours(h,0,0,0);
+    if(h<8)candidate.setDate(candidate.getDate()+1);// 0h and 4h = tomorrow
+    if(candidate>now){nextSync=candidate;break;}
+  }
+  if(!nextSync){const t=new Date(now);t.setDate(t.getDate()+1);t.setHours(8,0,0,0);nextSync=t;}
+  const nh=nextSync.getHours().toString().padStart(2,'0');const nm=nextSync.getMinutes().toString().padStart(2,'0');
+  const nextStr=nextSync.toDateString()===now.toDateString()?`${nh}:${nm}`:`Amanhã ${nh}:${nm}`;
+  el.innerHTML=`🔄 Última: <strong>${lastStr}</strong> · Próx: <strong>${nextStr}</strong>`;
+}
 
 let gCh,vPCh,aCh,odCh;const sparkCharts={};
 let tgtFilter='all',ogC='all',ogM='hm',ctf='all',gcMode='country',vcMode='total',gcFilter='all',vcFilter='all';
