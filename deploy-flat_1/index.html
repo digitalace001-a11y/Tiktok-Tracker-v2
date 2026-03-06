@@ -208,30 +208,33 @@ async function fetchAll(){
   console.log('[Sync]',c.data?.length||0,'countries,',a.data?.length||0,'accounts,',d.data?.length||0,'daily_data rows');
   DB.countries=c.data||[];DB.accounts=(a.data||[]).map(r=>({id:r.id,country:r.country,niche:r.niche||'',status:r.status||'active',createdAt:r.created_at}));
   DB.daily={};DB.videoDaily={};
-  // Temporary: store video_count_total per date/account to compute daily delta
   const vidTotals={};
   for(const r of(d.data||[])){
     if(!DB.daily[r.date])DB.daily[r.date]={};
     DB.daily[r.date][r.account_id]=r.followers;
+    // Source 1: direct videos_posted from retroactive scraping
+    if(r.videos_posted!=null&&r.videos_posted>0){
+      if(!DB.videoDaily[r.date])DB.videoDaily[r.date]={};
+      DB.videoDaily[r.date][r.account_id]=(DB.videoDaily[r.date][r.account_id]||0)+r.videos_posted;
+    }
     // Store video_count_total for delta calculation
     if(r.video_count_total!=null&&r.video_count_total>0){
       if(!vidTotals[r.account_id])vidTotals[r.account_id]={};
       vidTotals[r.account_id][r.date]=r.video_count_total;
     }
   }
-  // Compute videoDaily: difference in video_count_total between consecutive days
+  // Source 2: compute delta from video_count_total between consecutive days (fills gaps)
   for(const accId of Object.keys(vidTotals)){
     const accDates=Object.keys(vidTotals[accId]).sort();
-    for(let i=0;i<accDates.length;i++){
+    for(let i=1;i<accDates.length;i++){
       const dt=accDates[i];
-      const curr=vidTotals[accId][dt];
-      if(i>0){
-        const prev=vidTotals[accId][accDates[i-1]];
-        const posted=curr-prev;
-        if(posted>0){if(!DB.videoDaily[dt])DB.videoDaily[dt]={};DB.videoDaily[dt][accId]=posted;}
-      }
+      // Only fill if not already set by videos_posted
+      if(DB.videoDaily[dt]?.[accId])continue;
+      const posted=vidTotals[accId][dt]-vidTotals[accId][accDates[i-1]];
+      if(posted>0){if(!DB.videoDaily[dt])DB.videoDaily[dt]={};DB.videoDaily[dt][accId]=posted;}
     }
   }
+  console.log('[Sync] videoDaily dates:',Object.keys(DB.videoDaily).length);
   DB.videos=(v.data||[]).map(r=>({id:r.id.toString(),accountId:r.account_id,date:r.date,time:r.time||'',niche:r.niche||'',notes:r.notes||''}));
   DB.nicheChanges=(n.data||[]).map(r=>({id:r.id.toString(),accountId:r.account_id,date:r.date,from:r.niche_from||'',to:r.niche_to,reason:r.reason||''}));
   try{const t=localStorage.getItem('ace_targets');if(t)DB.targets=JSON.parse(t);}catch(e){DB.targets=[];}
